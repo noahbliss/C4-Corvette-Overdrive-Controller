@@ -46,6 +46,7 @@ void od_toggle() {
   } else {
     odactive = od_disable();
   }
+  delay(1000);
 }
 
 bool query_first() {
