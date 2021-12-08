@@ -26,7 +26,6 @@ bool lasttickreq = false;
 bool od_enable() { 
   digitalWrite(pin_odrelay, HIGH); // Enable Overdrive
   digitalWrite(LED_BUILTIN, HIGH); // Turn on internal1 LED
-  Serial.println("OVERDRIVE: [ENABLED]");
   return true;
 }
 
@@ -34,13 +33,11 @@ bool od_enable() {
 bool od_disable() {
   digitalWrite(pin_odrelay, LOW); // Disable Overdrive
   digitalWrite(LED_BUILTIN, LOW); // Turn off internal1 LED
-  Serial.println("OVERDRIVE: [DISABLED]");
   return false;
 }
 
 //toggle overdrive function
 void od_toggle() {
-  Serial.println("Attempting OD toggle..."); //DEBUG
   if(odactive == false) {
     odactive = od_enable();
   } else {
@@ -69,20 +66,16 @@ bool query_odreq() {
 
 //General setup and pin function definition
 void setup() {
-  Serial.begin(9600); //DEBUG
   pinMode(LED_BUILTIN, OUTPUT); //Internal LED
   pinMode(pin_odrelay, OUTPUT);
   pinMode(pin_odreq, INPUT_PULLUP);
   pinMode(pin_firstgear, INPUT_PULLUP);
-  //od_disable(); // Disable overdrive as default.
-  Serial.println("Initialized."); //DEBUG
 }
 
 //Main loop
 void loop() {
   infirst = query_first();
   if(infirst == false) { //if NOT in first...
-    // Serial.println("NOT in first"); //DEBUG
     odreq = query_odreq();
     if(odreq == true) { // if button is pressed...
       if(lasttickreq == false) { //if button wasn't pressed last time we read it...
