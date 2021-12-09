@@ -17,9 +17,16 @@ int pin_firstgear = 5;
 int val_odreq = HIGH;
 int val_firstgear = LOW;
 
+int count_first = 0; //number of cycles first has measured the same
+int count_odreq = 0; //number of cycles odreq has measured the same
+int count_threshold = 10; //number of cycles a measurement must be the same for a state to change.
+
 bool odactive = false;
 bool odreq = false;
 bool infirst = true;
+bool nowtickfirst = true;
+bool nowtickreq = false;
+bool lasttickfirst = true;
 bool lasttickreq = false;
 
 //enable overdrive function
@@ -74,9 +81,31 @@ void setup() {
 
 //Main loop
 void loop() {
-  infirst = query_first();
+  nowtickfirst = query_first();
+  if(nowtickfirst == lasttickfirst) { //if current measurement matches the last state...
+    if(count_first < count_threshold) {
+      ++count_first;  
+    } else if(count_first == count_threshold) {
+      infirst = nowtickfirst;
+      ++count_first;  
+    }
+  } else { //if current measurement does not match the last tick...
+    count_first = 1;
+    lasttickfirst = nowtickfirst;
+  }
   if(infirst == false) { //if NOT in first...
-    odreq = query_odreq();
+    nowtickreq = query_odreq();
+    if(nowtickreq == lasttickreq) {
+      if(count_odreq < count_threshold) {
+          ++count_odreq;
+      } else if(count_odreq == count_threshold) {
+          odreq = nowtickreq;
+          ++count_odreq;
+      }
+    } else {
+        count_odreq = 1;
+        lasttickreq = nowtickreq;
+    }
     if(odreq == true) { // if button is pressed...
       if(lasttickreq == false) { //if button wasn't pressed last time we read it...
         od_toggle(); //toggle overdrive
