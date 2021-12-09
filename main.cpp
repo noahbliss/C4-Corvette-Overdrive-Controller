@@ -15,11 +15,11 @@ int pin_firstgear = 5;
 //define states
 //bool odreq = false;
 int val_odreq = HIGH;
-int val_firstgear = LOW;
+int val_firstgear = HIGH;
 
 float count_first = 0; //number of cycles first has measured the same
 float count_odreq = 0; //number of cycles odreq has measured the same
-float count_threshold = 300; //number of cycles a measurement must be the same for a state to change.
+float count_threshold = 500; //number of cycles a measurement must be the same for a state to change.
 
 bool odactive = false;
 bool odreq = false;
@@ -50,7 +50,7 @@ void od_toggle() {
   } else {
     odactive = od_disable();
   }
-  delay(1000);
+  delay(1500);
 }
 
 bool query_first() {
@@ -112,6 +112,6 @@ void loop() {
     }
   } else if(odactive == true) { //if IN first...
     odactive = od_disable();
-    delay(1000);
+    delay(2000);
   }
 }
