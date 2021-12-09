@@ -17,9 +17,9 @@ int pin_firstgear = 5;
 int val_odreq = HIGH;
 int val_firstgear = LOW;
 
-int count_first = 0; //number of cycles first has measured the same
-int count_odreq = 0; //number of cycles odreq has measured the same
-int count_threshold = 10; //number of cycles a measurement must be the same for a state to change.
+float count_first = 0; //number of cycles first has measured the same
+float count_odreq = 0; //number of cycles odreq has measured the same
+float count_threshold = 300; //number of cycles a measurement must be the same for a state to change.
 
 bool odactive = false;
 bool odreq = false;
@@ -87,7 +87,7 @@ void loop() {
       count_first += 1;
     } else if(count_first == count_threshold) {
       infirst = nowtickfirst;
-      ++count_first;  
+      count_first += 1;  
     }
   } else { //if current measurement does not match the last tick...
     count_first = 1;
@@ -97,7 +97,7 @@ void loop() {
     nowtickreq = query_odreq();
     if(nowtickreq == lasttickreq) {
       if(count_odreq < count_threshold) {
-          ++count_odreq;
+          count_odreq += 1;
       } else if(count_odreq == count_threshold) {
           odreq = nowtickreq;
           count_odreq += 1;
@@ -107,15 +107,11 @@ void loop() {
         lasttickreq = nowtickreq;
     }
     if(odreq == true) { // if button is pressed...
-      if(lasttickreq == false) { //if button wasn't pressed last time we read it...
         od_toggle(); //toggle overdrive
-        lasttickreq = true; //set last request to true
-      }
-    } else {
-      lasttickreq = false;
+        odreq = false;
     }
   } else if(odactive == true) { //if IN first...
     odactive = od_disable();
-    lasttickreq = false;
+    delay(1000);
   }
 }
