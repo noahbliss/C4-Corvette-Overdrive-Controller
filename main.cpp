@@ -84,7 +84,7 @@ void loop() {
   nowtickfirst = query_first();
   if(nowtickfirst == lasttickfirst) { //if current measurement matches the last state...
     if(count_first < count_threshold) {
-      ++count_first;  
+      count_first += 1;
     } else if(count_first == count_threshold) {
       infirst = nowtickfirst;
       ++count_first;  
@@ -100,7 +100,7 @@ void loop() {
           ++count_odreq;
       } else if(count_odreq == count_threshold) {
           odreq = nowtickreq;
-          ++count_odreq;
+          count_odreq += 1;
       }
     } else {
         count_odreq = 1;
