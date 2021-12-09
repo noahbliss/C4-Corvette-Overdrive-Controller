@@ -15,7 +15,7 @@ int pin_firstgear = 5;
 //define states
 //bool odreq = false;
 int val_odreq = HIGH;
-int val_firstgear = HIGH;
+int val_firstgear = LOW;
 
 float count_first = 0; //number of cycles first has measured the same
 float count_odreq = 0; //number of cycles odreq has measured the same
@@ -31,14 +31,14 @@ bool lasttickreq = false;
 
 //enable overdrive function
 bool od_enable() { 
-  digitalWrite(pin_odrelay, HIGH); // Enable Overdrive
+  digitalWrite(pin_odrelay, LOW); // Enable Overdrive
   digitalWrite(LED_BUILTIN, HIGH); // Turn on internal1 LED
   return true;
 }
 
 //disable overdrive function
 bool od_disable() {
-  digitalWrite(pin_odrelay, LOW); // Disable Overdrive
+  digitalWrite(pin_odrelay, HIGH); // Disable Overdrive
   digitalWrite(LED_BUILTIN, LOW); // Turn off internal1 LED
   return false;
 }
@@ -55,7 +55,7 @@ void od_toggle() {
 
 bool query_first() {
   int val_firstgear = digitalRead(pin_firstgear); 
-  if(val_firstgear == LOW) {
+  if(val_firstgear == HIGH) {
     return true;
   } else {
     return false;
@@ -77,6 +77,8 @@ void setup() {
   pinMode(pin_odrelay, OUTPUT);
   pinMode(pin_odreq, INPUT_PULLUP);
   pinMode(pin_firstgear, INPUT_PULLUP);
+  odactive = od_disable();
+  delay(2300);
 }
 
 //Main loop
@@ -112,6 +114,6 @@ void loop() {
     }
   } else if(odactive == true) { //if IN first...
     odactive = od_disable();
-    delay(2000);
+    delay(2300);
   }
 }
